@@ -8,7 +8,7 @@ A plataforma permite que o estudante escolha uma área ou cargo, visualize concu
 
 ## Aplicação web
 
-O frontend do MVP fica em `apps/web`, separado dos dados CSV, scripts Python e documentos do projeto.
+O frontend do MVP fica em `apps/web`, separado dos dados CSV, scripts Python e documentos do projeto. A publicação está configurada para GitHub Pages via GitHub Actions.
 
 ---
 

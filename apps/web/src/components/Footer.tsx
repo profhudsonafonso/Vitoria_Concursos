@@ -10,7 +10,10 @@ export function Footer() {
           <a className="hover:text-brand dark:hover:text-emerald-300" href="#">
             Fontes oficiais
           </a>
-          <a className="hover:text-brand dark:hover:text-emerald-300" href="../../mvp/requisitos_mvp.md">
+          <a
+            className="hover:text-brand dark:hover:text-emerald-300"
+            href="https://github.com/profhudsonafonso/Vitoria_Concursos/blob/main/mvp/requisitos_mvp.md"
+          >
             Requisitos do MVP
           </a>
           <a className="hover:text-brand dark:hover:text-emerald-300" href="https://github.com/profhudsonafonso/Vitoria_Concursos">
