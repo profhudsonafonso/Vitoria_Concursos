@@ -6,6 +6,10 @@ O **Vitória Concursos** é uma plataforma de inteligência para estudantes de c
 
 A plataforma permite que o estudante escolha uma área ou cargo, visualize concursos relacionados e compare os conteúdos cobrados em diferentes editais. Com isso, ele consegue identificar quais assuntos já estudados podem ser reaproveitados, quais conteúdos são novos e quais concursos são mais compatíveis com sua preparação atual.
 
+## Aplicação web
+
+O frontend do MVP fica em `apps/web`, separado dos dados CSV, scripts Python e documentos do projeto.
+
 ---
 
 ## Problema
