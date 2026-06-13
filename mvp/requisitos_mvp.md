@@ -1,38 +1,31 @@
-# Requisitos do MVP — Vitória Concursos
+﻿# Requisitos do MVP — Vitória Concursos
 
-## 1. Objetivo do MVP
+## 1. Objetivo
 
 O MVP do Vitória Concursos deve demonstrar, de forma simples e funcional, como estudantes de concurso público podem comparar editais, visualizar conteúdos em comum e organizar o que já estudaram.
 
-A primeira versão não precisa automatizar toda a coleta de editais. O foco inicial é validar o valor principal da solução:
+O foco inicial é validar a principal proposta de valor:
 
-**Comparar conteúdos programáticos entre concursos e mostrar o aproveitamento de estudo do usuário.**
+**comparar conteúdos programáticos entre concursos e mostrar o aproveitamento de estudo do usuário.**
 
 ---
 
 ## 2. Escopo da primeira versão
 
-O MVP inicial será focado em uma área piloto, com poucos editais cadastrados manualmente ou semi-automaticamente.
+A primeira versão será baseada em dados estruturados em CSV e scripts de apoio em Python.
 
-### Área piloto sugerida
+O MVP deve usar a base inicial criada em:
 
-Escolher uma das opções:
-
-- Área administrativa;
-- Técnico Administrativo;
-- Assistente em Administração;
-- Concursos de universidades e institutos federais;
-- Concursos municipais;
-- Concursos de tribunais.
-
-### Quantidade inicial de dados
-
-Para a primeira versão, a base pode conter:
-
-- 5 a 10 editais;
-- 10 a 30 cargos;
-- 5 a 15 disciplinas;
-- 50 a 200 assuntos normalizados.
+| Arquivo | Função |
+|---|---|
+| data/editais.csv | Lista de editais |
+| data/cargos.csv | Lista de cargos |
+| data/disciplinas.csv | Lista de disciplinas |
+| data/assuntos.csv | Assuntos originais e normalizados |
+| data/conteudos_cargo.csv | Ligação entre cargos e assuntos |
+| data/progresso_usuario_modelo.csv | Progresso de estudo do usuário |
+| data/comparacoes_modelo.csv | Modelo de comparação |
+| data/fontes.csv | Fontes oficiais e auxiliares |
 
 ---
 
@@ -55,6 +48,10 @@ O usuário principal é o estudante de concurso público que deseja saber:
 
 O sistema deve exibir uma lista de editais cadastrados.
 
+Fonte principal:
+
+    data/editais.csv
+
 Cada edital deve mostrar:
 
 - nome do concurso;
@@ -63,25 +60,48 @@ Cada edital deve mostrar:
 - ano;
 - esfera;
 - estado;
+- município;
 - área principal;
-- link da fonte oficial, quando disponível.
+- link da fonte oficial.
 
 ---
 
-### 4.2 Filtrar editais
+### 4.2 Listar cargos
 
-O usuário deve conseguir filtrar editais por:
+O sistema deve exibir os cargos vinculados aos editais.
+
+Fonte principal:
+
+    data/cargos.csv
+
+Cada cargo deve mostrar:
+
+- nome do cargo;
+- edital relacionado;
+- área;
+- escolaridade;
+- salário;
+- vagas;
+- carga horária;
+- requisitos.
+
+---
+
+### 4.3 Filtrar editais e cargos
+
+O usuário deve conseguir filtrar por:
 
 - área;
 - cargo;
 - banca;
 - escolaridade;
 - estado;
-- ano.
+- ano;
+- esfera.
 
 ---
 
-### 4.3 Visualizar detalhe do edital
+### 4.4 Visualizar detalhe do edital
 
 Ao clicar em um edital, o usuário deve visualizar:
 
@@ -92,24 +112,42 @@ Ao clicar em um edital, o usuário deve visualizar:
 - número de vagas;
 - disciplinas;
 - assuntos cobrados;
-- link da fonte oficial.
+- link da fonte oficial;
+- status de revisão dos dados.
+
+Fontes relacionadas:
+
+    data/editais.csv
+    data/cargos.csv
+    data/disciplinas.csv
+    data/assuntos.csv
+    data/conteudos_cargo.csv
 
 ---
 
-### 4.4 Comparar dois editais
+### 4.5 Comparar dois cargos ou editais
 
-O usuário deve selecionar dois editais ou dois cargos para comparação.
+O usuário deve selecionar dois cargos ou dois editais para comparação.
 
 A comparação deve mostrar:
 
 - conteúdos em comum;
-- conteúdos exclusivos do primeiro edital;
-- conteúdos exclusivos do segundo edital;
+- conteúdos exclusivos do primeiro cargo;
+- conteúdos exclusivos do segundo cargo;
 - quantidade de assuntos em comum;
+- total de assuntos únicos;
 - percentual de similaridade;
 - nível de aproveitamento.
 
-Classificação inicial sugerida:
+Script de referência:
+
+    scripts/compare_editais.py
+
+Exemplo de execução:
+
+    python scripts\compare_editais.py --cargo-a cargo_001 --cargo-b cargo_002
+
+Classificação inicial:
 
 | Similaridade | Nível |
 |---:|---|
@@ -119,7 +157,7 @@ Classificação inicial sugerida:
 
 ---
 
-### 4.5 Marcar assuntos estudados
+### 4.6 Marcar assuntos estudados
 
 O usuário deve conseguir marcar um assunto como:
 
@@ -129,56 +167,71 @@ O usuário deve conseguir marcar um assunto como:
 - revisar;
 - tenho dificuldade.
 
-Na primeira versão, isso pode ficar salvo apenas no navegador, usando local storage, ou em uma base simples.
+Fonte inicial:
+
+    data/progresso_usuario_modelo.csv
+
+Em uma primeira versão web, esse progresso pode ficar salvo em local storage, JSON local, Supabase ou banco simples.
 
 ---
 
-### 4.6 Gerar relatório de aproveitamento
+### 4.7 Gerar relatório de aproveitamento
 
 O sistema deve gerar um relatório simples com:
 
-- total de assuntos do edital;
-- quantidade de assuntos já estudados;
+- total de assuntos do cargo;
+- quantidade de assuntos estudados;
+- quantidade de assuntos em andamento;
+- quantidade de assuntos pendentes;
+- quantidade de assuntos para revisão;
+- quantidade de assuntos com dificuldade;
 - percentual estudado;
-- assuntos pendentes;
-- assuntos para revisão;
-- assuntos novos em comparação com outro edital.
+- percentual estudado ou em andamento;
+- recomendação simples.
 
-Exemplo de relatório:
+Script de referência:
 
-    Você já estudou 64% do conteúdo deste edital.
+    scripts/student_report.py
 
-    Assuntos já estudados:
-    - Língua Portuguesa
-    - Informática
-    - Direito Administrativo
+Exemplo de execução:
 
-    Assuntos pendentes:
-    - Legislação específica
-    - Administração Pública
-    - Raciocínio Lógico
+    python scripts\student_report.py --usuario-id usuario_001 --cargo-id cargo_001
+
+---
+
+### 4.8 Gerar relatório de normalização
+
+O sistema deve permitir revisar assuntos equivalentes.
+
+Script de referência:
+
+    scripts/normalize_subjects.py
+
+Exemplo de execução:
+
+    python scripts\normalize_subjects.py --report
+
+Arquivos gerados:
+
+| Arquivo | Função |
+|---|---|
+| data/normalized_subjects/normalized_subjects_summary.csv | Resumo dos assuntos normalizados |
+| data/normalized_subjects/subject_equivalence_candidates.csv | Candidatos a equivalência |
+| data/normalized_subjects/subjects_to_review.csv | Assuntos para revisão |
 
 ---
 
 ## 5. Funcionalidades desejáveis
 
-Estas funcionalidades não são obrigatórias na primeira versão, mas podem ser adicionadas se houver tempo.
+Estas funcionalidades não são obrigatórias na primeira versão, mas podem ser adicionadas depois.
 
 ### 5.1 Ranking de editais compatíveis
 
-O sistema pode mostrar quais editais são mais parecidos com um edital base.
-
-| Edital | Similaridade | Aproveitamento |
-|---|---:|---|
-| Concurso B | 86% | Alto |
-| Concurso C | 79% | Alto |
-| Concurso D | 62% | Médio |
-
----
+Mostrar quais editais são mais parecidos com um edital base.
 
 ### 5.2 Plano de estudos simples
 
-O sistema pode gerar uma sugestão de estudo com base nos assuntos pendentes.
+Gerar uma sugestão de estudo com base nos assuntos pendentes.
 
 Critérios possíveis:
 
@@ -188,17 +241,17 @@ Critérios possíveis:
 - recorrência dos assuntos;
 - tempo disponível por semana.
 
----
-
 ### 5.3 Alertas de novos editais
 
-Funcionalidade futura para avisar o usuário quando um edital novo for parecido com sua preparação atual.
-
----
+Avisar o usuário quando um edital novo for parecido com sua preparação atual.
 
 ### 5.4 Comparação por banca
 
-Funcionalidade futura para mostrar padrões de conteúdos por banca organizadora.
+Mostrar padrões de conteúdos por banca organizadora.
+
+### 5.5 Comparação semântica com IA
+
+Identificar assuntos parecidos mesmo quando o texto normalizado ainda não é igual.
 
 ---
 
@@ -237,6 +290,10 @@ Elementos:
 - botão "ver detalhes";
 - botão "comparar".
 
+Fonte:
+
+    data/editais.csv
+
 ---
 
 ### Tela 3 — Detalhe do edital
@@ -256,21 +313,33 @@ Elementos:
 - assuntos;
 - link da fonte oficial.
 
+Fontes:
+
+    data/editais.csv
+    data/cargos.csv
+    data/disciplinas.csv
+    data/assuntos.csv
+    data/conteudos_cargo.csv
+
 ---
 
-### Tela 4 — Comparação de editais
+### Tela 4 — Comparação
 
-Objetivo: mostrar o resultado da comparação entre dois editais ou cargos.
+Objetivo: mostrar o resultado da comparação entre dois cargos ou editais.
 
 Elementos:
 
-- seletor do edital A;
-- seletor do edital B;
+- seletor do cargo A;
+- seletor do cargo B;
 - percentual de similaridade;
+- nível de aproveitamento;
 - conteúdos em comum;
-- conteúdos exclusivos do edital A;
-- conteúdos exclusivos do edital B;
-- recomendação de aproveitamento.
+- conteúdos exclusivos do cargo A;
+- conteúdos exclusivos do cargo B.
+
+Script de referência:
+
+    scripts/compare_editais.py
 
 ---
 
@@ -286,6 +355,10 @@ Elementos:
 - filtro por status;
 - barra de progresso.
 
+Fonte inicial:
+
+    data/progresso_usuario_modelo.csv
+
 ---
 
 ### Tela 6 — Relatório de aproveitamento
@@ -298,27 +371,53 @@ Elementos:
 - quantidade de assuntos pendentes;
 - principais conteúdos novos;
 - conteúdos para revisão;
+- conteúdos com dificuldade;
 - recomendação final.
+
+Script de referência:
+
+    scripts/student_report.py
+
+---
+
+### Tela 7 — Revisão de normalização
+
+Objetivo: apoiar o administrador ou equipe na revisão dos assuntos equivalentes.
+
+Elementos:
+
+- grupos de assuntos normalizados;
+- textos originais agrupados;
+- status de revisão;
+- ação para confirmar equivalência;
+- ação para separar assuntos diferentes.
+
+Fonte:
+
+    data/normalized_subjects/subjects_to_review.csv
 
 ---
 
 ## 7. Dados mínimos necessários
 
-### 7.1 Concurso
+### 7.1 Edital
 
 Campos mínimos:
 
 | Campo | Exemplo |
 |---|---|
-| id | concurso_001 |
-| nome | Concurso Prefeitura X |
-| orgao | Prefeitura Municipal X |
+| edital_id | edital_001 |
+| nome_concurso | Concurso Prefeitura Exemplo |
+| orgao | Prefeitura Municipal Exemplo |
 | banca | Banca Exemplo |
 | ano | 2026 |
 | esfera | Municipal |
 | estado | SC |
-| municipio | Florianópolis |
-| fonte_url | Link oficial do edital |
+| municipio | Florianopolis |
+| area_principal | Administrativa |
+| edital_url | Link do PDF |
+| fonte_url | Link da página oficial |
+| status_revisao | pendente |
 
 ---
 
@@ -328,13 +427,14 @@ Campos mínimos:
 
 | Campo | Exemplo |
 |---|---|
-| id | cargo_001 |
-| concurso_id | concurso_001 |
-| nome | Técnico Administrativo |
+| cargo_id | cargo_001 |
+| edital_id | edital_001 |
+| nome_cargo | Tecnico Administrativo |
 | area | Administrativa |
-| escolaridade | Nível médio |
+| escolaridade | Nivel medio |
 | salario | 3500.00 |
 | vagas | 10 |
+| carga_horaria | 40h |
 
 ---
 
@@ -344,8 +444,10 @@ Campos mínimos:
 
 | Campo | Exemplo |
 |---|---|
-| id | disciplina_001 |
-| nome | Língua Portuguesa |
+| disciplina_id | disc_001 |
+| nome_original | Lingua Portuguesa |
+| nome_normalizado | Lingua Portuguesa |
+| area_conhecimento | Linguagens |
 
 ---
 
@@ -355,10 +457,12 @@ Campos mínimos:
 
 | Campo | Exemplo |
 |---|---|
-| id | assunto_001 |
-| disciplina_id | disciplina_001 |
-| texto_original | Interpretação de textos |
-| texto_normalizado | Interpretação de texto |
+| assunto_id | assunto_001 |
+| disciplina_id | disc_001 |
+| texto_original | Interpretacao de textos |
+| texto_normalizado | Interpretacao de texto |
+| nivel | tema |
+| status_revisao | pendente |
 
 ---
 
@@ -368,8 +472,12 @@ Campos mínimos:
 
 | Campo | Exemplo |
 |---|---|
+| conteudo_id | conteudo_001 |
 | cargo_id | cargo_001 |
 | assunto_id | assunto_001 |
+| obrigatorio | sim |
+| fonte | Edital oficial |
+| pagina | 32 |
 
 ---
 
@@ -382,6 +490,8 @@ Campos mínimos:
 | usuario_id | usuario_001 |
 | assunto_id | assunto_001 |
 | status | estudado |
+| data_atualizacao | 2026-06-13 |
+| observacoes | Exemplo de progresso |
 
 Status possíveis:
 
@@ -395,31 +505,38 @@ Status possíveis:
 
 ## 8. Lógica inicial de comparação
 
-Na primeira versão, a comparação pode usar nomes normalizados dos assuntos.
+Na primeira versão, a comparação usa o campo:
 
-Fórmula simples:
+    texto_normalizado
+
+Dois assuntos são considerados iguais quando têm o mesmo texto normalizado.
+
+Fórmula:
 
     similaridade = assuntos_em_comum / total_de_assuntos_unicos
 
 Exemplo:
 
-    Edital A: 100 assuntos
-    Edital B: 80 assuntos
-    Assuntos únicos somados: 120
-    Assuntos em comum: 70
-
-    Similaridade = 70 / 120 = 58,3%
+    Cargo A: 4 assuntos
+    Cargo B: 4 assuntos
+    Assuntos em comum: 2
+    Total de assuntos únicos: 6
+    Similaridade = 2 / 6 = 33,33%
 
 ---
 
 ## 9. Regras de negócio
 
 1. Dois assuntos são iguais quando possuem o mesmo texto normalizado.
-2. Assuntos apenas parecidos podem ser tratados em fase futura com IA.
-3. O percentual de similaridade deve considerar o total de assuntos únicos entre os dois editais.
+2. Assuntos apenas parecidos devem ser marcados para revisão.
+3. O percentual de similaridade deve considerar o total de assuntos únicos.
 4. O relatório de aproveitamento deve considerar os assuntos marcados pelo usuário.
 5. Toda informação extraída de edital deve manter referência para a fonte original.
-6. O sistema deve informar quando um dado foi extraído automaticamente e ainda precisa de revisão.
+6. Dados extraídos automaticamente devem ter status de revisão.
+7. O edital oficial deve ser sempre indicado como fonte final.
+8. A plataforma não deve prometer aprovação em concurso.
+9. O sistema deve separar dado bruto, dado extraído e dado normalizado.
+10. O MVP pode começar com dados manuais, desde que o fluxo de comparação funcione.
 
 ---
 
@@ -437,20 +554,23 @@ Exemplo:
 
 - manter link para fonte oficial;
 - permitir revisão humana dos dados;
-- indicar data de atualização.
+- indicar data de atualização;
+- mostrar status de revisão.
 
 ### Escalabilidade futura
 
 - permitir adicionar novos editais;
 - permitir novas áreas;
 - permitir novos cargos;
-- permitir integração com extração automática.
+- permitir integração com extração automática;
+- permitir comparação semântica com IA.
 
 ### Segurança
 
 - proteger dados do usuário;
 - evitar exposição de informações pessoais;
-- permitir exclusão de dados de progresso.
+- permitir exclusão de dados de progresso;
+- respeitar termos de uso das fontes.
 
 ---
 
@@ -461,7 +581,7 @@ Exemplo:
 - Next.js;
 - Tailwind CSS;
 - Shadcn UI;
-- JSON local ou Supabase;
+- JSON local ou CSV convertido para JSON;
 - Vercel para publicação.
 
 ### Opção com backend
@@ -469,31 +589,44 @@ Exemplo:
 - Next.js no frontend;
 - FastAPI ou Node.js no backend;
 - PostgreSQL ou Supabase;
-- Python para extração de PDFs.
+- Python para extração, normalização e comparação.
 
 ---
 
-## 12. Critérios de aceite
+## 12. Scripts de apoio do MVP
+
+| Script | Função |
+|---|---|
+| scripts/compare_editais.py | Comparar cargos e calcular similaridade |
+| scripts/normalize_subjects.py | Gerar relatórios de normalização |
+| scripts/student_report.py | Gerar relatório de progresso do estudante |
+| scripts/extract_pdf_content.py | Futuro script de extração de texto de PDF |
+
+---
+
+## 13. Critérios de aceite
 
 O MVP será considerado entregue quando permitir:
 
 - [ ] visualizar lista de editais;
 - [ ] filtrar editais;
 - [ ] abrir detalhe de edital;
-- [ ] selecionar dois editais ou cargos;
+- [ ] listar cargos;
+- [ ] selecionar dois cargos ou editais;
 - [ ] comparar conteúdos;
 - [ ] ver percentual de similaridade;
 - [ ] ver conteúdos em comum;
 - [ ] ver conteúdos exclusivos;
 - [ ] marcar assuntos estudados;
 - [ ] visualizar relatório de aproveitamento;
+- [ ] revisar assuntos equivalentes;
 - [ ] acessar link público do MVP.
 
 ---
 
-## 13. Fora do escopo da primeira versão
+## 14. Fora do escopo da primeira versão
 
-Para evitar escopo muito grande, a primeira versão não precisa ter:
+A primeira versão não precisa ter:
 
 - login completo;
 - pagamento;
@@ -507,13 +640,14 @@ Para evitar escopo muito grande, a primeira versão não precisa ter:
 
 ---
 
-## 14. Próximos passos técnicos
+## 15. Próximos passos técnicos
 
-1. Escolher área piloto.
-2. Selecionar 5 a 10 editais.
-3. Criar base inicial em JSON ou CSV.
-4. Criar interface de listagem.
-5. Criar tela de comparação.
-6. Criar checklist de assuntos estudados.
-7. Criar relatório de aproveitamento.
+1. Escolher área piloto real.
+2. Selecionar 5 a 10 editais reais.
+3. Substituir os exemplos dos CSVs por dados reais.
+4. Testar comparação com cargos reais.
+5. Rodar relatório de normalização.
+6. Rodar relatório do estudante.
+7. Criar interface web inicial.
 8. Publicar MVP.
+9. Validar com estudantes.
