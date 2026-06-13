@@ -1,0 +1,5 @@
+normalized_key,assunto_id,disciplina_id,texto_original,texto_normalizado,status_revisao,observacoes
+atos administrativos,assunto_003,disc_002,Atos administrativos,Atos administrativos,pendente,
+atos administrativos,assunto_004,disc_002,Ato administrativo conceito requisitos e atributos,Atos administrativos,pendente,Possivel equivalente de assunto_003
+interpretacao de texto,assunto_001,disc_001,Interpretacao de textos,Interpretacao de texto,pendente,
+interpretacao de texto,assunto_002,disc_001,Compreensao e interpretacao textual,Interpretacao de texto,pendente,Possivel equivalente de assunto_001
